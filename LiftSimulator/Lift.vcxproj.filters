@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Header\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Shaders\rect.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Shaders\rect.vert">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include=".gitignore" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\btn_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_PR.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_SU.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_fan.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\signature.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_open.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_close.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_stop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\cursor_colored.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\cursor_normal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\reset.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\you_died.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\hallway.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\lift_shaft.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\lift_door_closed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\lift_door_opened.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\ground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\sky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\person_standing.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\person_walking.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
