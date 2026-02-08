@@ -24,6 +24,14 @@ void Camera::processInput(GLFWwindow* window, float deltaTime)
 		position -= glm::vec3(right.x, 0.0f, right.z) * velocity;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		position += glm::vec3(right.x, 0.0f, right.z) * velocity;
+
+
+
+	// floating up and down for TESTING
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		position -= glm::vec3(0.0f, 1.0f, 0.0f) * velocity;
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		position += glm::vec3(0.0f, 1.0f, 0.0f) * velocity;
 }
 
 

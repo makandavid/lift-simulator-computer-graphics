@@ -11,26 +11,43 @@ public:
 	Renderer renderer;
 	Camera camera;
 
-	// Building dimensions
-	int floorCount = 8;          // total floors including basement
-	float floorHeight = 3.0f;
+	float groundSize = 180.0f;     // outside ground (big flat cube)
 
 	float buildingWidth = 20.0f;  // X axis
 	float buildingDepth = 20.0f;  // Z axis
 
-	float wallThickness = 0.5f;   // walls
-	float floorThickness = 0.2f;  // each floor height thickness
-	float groundHeight = 0.1f;    // outside ground thickness
-	float groundThickness = 0.1f;
-	float groundSize = 80.0f;     // outside ground (big flat cube)
+	int floorCount = 8;          // total floors including basement
+	float floorHeight = 3.0f;
 
+	int currentFloor = 0;
+	float elevatorY = 0.0f;
+	float elevatorSpeed = 2.0f;
+
+	bool elevatorMoving = false;
+	int targetFloor = 0;
+
+	float doorOffset = 0.0f;
+	float doorMaxOffset = 0.6f;
+	float doorSpeed = 2.0f;
+
+	bool doorOpening = false;
+	bool doorClosing = false;
+	bool doorOpen = false;
+
+	// colors
 	glm::vec3 colorGround = glm::vec3(0.3f, 0.7f, 0.3f);    // green
 	glm::vec3 colorFloor = glm::vec3(0.7f, 0.7f, 0.7f);    // light gray
 	glm::vec3 colorWall = glm::vec3(0.6f, 0.6f, 0.8f);    // bluish
+	glm::vec3 colorShaft = glm::vec3(0.9f, 0.7f, 0.8f);
+	glm::vec3 colorElevator = glm::vec3(0.1f, 0.7f, 0.8f);
+	glm::vec3 colorElevatorDoor = glm::vec3(0.1f, 0.5f, 0.8f);
 
 
 
 	void init();
-	void update();
+	void update(float deltaTime);
 	void render();
+
+private:
+	void renderBuilding();
 };

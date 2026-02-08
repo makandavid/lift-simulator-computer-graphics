@@ -82,7 +82,7 @@ int main()
 
         app.camera.processInput(window, delta);
 
-        app.update();
+        app.update(delta);
         app.render();
 
         glfwSwapBuffers(window);
