@@ -80,8 +80,6 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
-        app.camera.processInput(window, delta);
-
         app.update(delta);
         app.render();
 

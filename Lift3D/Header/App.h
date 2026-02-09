@@ -2,6 +2,7 @@
 #include "../Header/Camera.h"
 #include "../Header/Renderer.h"
 #include <GLFW/glfw3.h>
+#include <vector>
 
 class App
 {
@@ -10,6 +11,13 @@ public:
 	
 	Renderer renderer;
 	Camera camera;
+
+	struct Collider
+	{
+		glm::vec3 min;
+		glm::vec3 max;
+	};
+	std::vector<Collider> colliders;
 
 	float groundSize = 180.0f;     // outside ground (big flat cube)
 
@@ -49,5 +57,13 @@ public:
 	void render();
 
 private:
+	void renderOutsideGround();
 	void renderBuilding();
+	void renderElevator();
+
+	void addCubeCollider(glm::vec3 center, glm::vec3 size);
+	void buildStaticColliders();
+	bool isColliding(glm::vec3 pos);
+
+	void testingWithButtons();
 };

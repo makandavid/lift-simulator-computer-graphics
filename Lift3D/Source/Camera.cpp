@@ -13,17 +13,26 @@ void Camera::update(GLFWwindow* window)
 	up = glm::normalize(glm::cross(right, front));
 }
 
-void Camera::processInput(GLFWwindow* window, float deltaTime)
+glm::vec3 Camera::processInput(GLFWwindow* window, float deltaTime)
 {
 	float velocity = speed * deltaTime;
+
+	glm::vec3 movement(0.0f);
+
+	glm::vec3 forwardXZ = glm::normalize(glm::vec3(front.x, 0.0f, front.z));
+	glm::vec3 rightXZ = glm::normalize(glm::vec3(right.x, 0.0f, right.z));
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		position += glm::vec3(front.x, 0.0f, front.z) * velocity;
+		movement += forwardXZ * velocity;
+
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		position -= glm::vec3(front.x, 0.0f, front.z) * velocity;
+		movement -= forwardXZ * velocity;
+
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		position -= glm::vec3(right.x, 0.0f, right.z) * velocity;
+		movement -= rightXZ * velocity;
+
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		position += glm::vec3(right.x, 0.0f, right.z) * velocity;
+		movement += rightXZ * velocity;
 
 
 
@@ -32,6 +41,10 @@ void Camera::processInput(GLFWwindow* window, float deltaTime)
 		position -= glm::vec3(0.0f, 1.0f, 0.0f) * velocity;
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 		position += glm::vec3(0.0f, 1.0f, 0.0f) * velocity;
+
+
+
+	return movement;
 }
 
 
