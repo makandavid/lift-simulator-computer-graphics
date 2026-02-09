@@ -62,7 +62,9 @@ private:
 	void renderElevator();
 
 	void addCubeCollider(glm::vec3 center, glm::vec3 size);
-	void buildStaticColliders();
+	void buildColliders();
+	void collidesBuilding();
+	void collidesElevator();
 	bool isColliding(glm::vec3 pos);
 
 	void testingWithButtons();
