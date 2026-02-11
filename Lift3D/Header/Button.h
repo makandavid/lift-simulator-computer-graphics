@@ -6,6 +6,7 @@ struct ElevatorButton
     glm::vec3 position;
     glm::vec3 size;
     int action;   // what button does
+    bool pressed = false;
 };
 
 enum ButtonAction

@@ -141,8 +141,8 @@
     <ClCompile Include="Source\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Button.h" />
     <ClInclude Include="Header\App.h" />
+    <ClInclude Include="Header\Button.h" />
     <ClInclude Include="Header\Camera.h" />
     <ClInclude Include="Header\Input.h" />
     <ClInclude Include="Header\Renderer.h" />

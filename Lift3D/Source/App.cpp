@@ -1,9 +1,14 @@
 #include <GL/glew.h>
 #include "../Header/App.h"
+#include "../Header/Util.h"
 
 void App::init()
 {
     renderer.init();
+
+    cursorNormal = loadImageToCursor("Resources/cursor_normal.png");
+    glfwSetCursor(window, cursorNormal);
+
 
     currentFloor = 0;
     elevatorY = currentFloor * floorHeight + floorHeight / 2;
@@ -717,7 +722,58 @@ void App::renderButtons()
 
 
 
+bool rayIntersectsAABB(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 boxMin, glm::vec3 boxMax, float& t)
+{
+    float tMin = (boxMin.x - rayOrigin.x) / rayDir.x;
+    float tMax = (boxMax.x - rayOrigin.x) / rayDir.x;
+    if (tMin > tMax) std::swap(tMin, tMax);
 
+    float tyMin = (boxMin.y - rayOrigin.y) / rayDir.y;
+    float tyMax = (boxMax.y - rayOrigin.y) / rayDir.y;
+    if (tyMin > tyMax) std::swap(tyMin, tyMax);
+
+    if ((tMin > tyMax) || (tyMin > tMax)) return false;
+    if (tyMin > tMin) tMin = tyMin;
+    if (tyMax < tMax) tMax = tyMax;
+
+    float tzMin = (boxMin.z - rayOrigin.z) / rayDir.z;
+    float tzMax = (boxMax.z - rayOrigin.z) / rayDir.z;
+    if (tzMin > tzMax) std::swap(tzMin, tzMax);
+
+    if ((tMin > tzMax) || (tzMin > tMax)) return false;
+    if (tzMin > tMin) tMin = tzMin;
+    if (tzMax < tMax) tMax = tzMax;
+
+    t = tMin;
+    return true;
+}
+
+void App::processOutsideButtonClick(GLFWwindow* window)
+{
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        glm::vec3 rayOrigin = camera.position;
+        glm::vec3 rayDir = glm::normalize(camera.front); // camera forward
+
+        float t;
+
+        // Check every outside button
+        for (auto& b : outsideButtons)
+        {
+            glm::vec3 min = b.position - b.size * 0.5f;
+            glm::vec3 max = b.position + b.size * 0.5f;
+
+            if (rayIntersectsAABB(rayOrigin, rayDir, min, max, t))
+            {
+                if (t > 2.0f) return;
+                doorOpening = true;
+                doorClosing = false;
+                b.pressed = true;
+                return;
+            }
+        }
+    }
+}
 
 
 

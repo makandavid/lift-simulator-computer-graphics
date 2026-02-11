@@ -1,7 +1,7 @@
 #pragma once
 #include "../Header/Camera.h"
 #include "../Header/Renderer.h"
-#include "../Button.h"
+#include "../Header/Button.h"
 #include <GLFW/glfw3.h>
 #include <vector>
 
@@ -54,6 +54,12 @@ public:
 
 	std::vector<ElevatorButton> elevatorButtons;
 	std::vector<ElevatorButton> outsideButtons;
+
+	GLFWcursor* cursorNormal = nullptr;
+	GLFWcursor* cursorFan = nullptr;
+
+	bool rayIntersectsCube(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 cubeCenter, glm::vec3 cubeSize);
+	void processOutsideButtonClick(GLFWwindow* window);
 
 
 

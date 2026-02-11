@@ -7,34 +7,44 @@ static App* gApp = nullptr;
 
 void mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
-    static float lastX = 400, lastY = 300;
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);  // get current window size
+
+    double centerX = width / 2.0;
+    double centerY = height / 2.0;
+
     static bool firstMouse = true;
-    static float sensitivity = 0.1f;
+    static double lastX = centerX, lastY = centerY;
 
     if (firstMouse)
     {
-        lastX = xpos;
-        lastY = ypos;
+        lastX = centerX;
+        lastY = centerY;
         firstMouse = false;
+        glfwSetCursorPos(window, centerX, centerY);
+        return;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed: top-left = (0,0)
-    lastX = xpos;
-    lastY = ypos;
+    double xoffset = xpos - centerX;
+    double yoffset = centerY - ypos; // reversed Y
 
+    float sensitivity = 0.1f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    gApp->camera.yaw += xoffset; // yaw is rotation around **global Y axis**
-    gApp->camera.pitch += yoffset; // pitch is rotation around camera’s local X axis
+    gApp->camera.yaw += xoffset;
+    gApp->camera.pitch += yoffset;
 
     // clamp pitch
     if (gApp->camera.pitch > 89.0f) gApp->camera.pitch = 89.0f;
     if (gApp->camera.pitch < -89.0f) gApp->camera.pitch = -89.0f;
 
     gApp->camera.update(window);
+
+    // reset cursor to center
+    glfwSetCursorPos(window, centerX, centerY);
 }
+
 
 
 int main()
@@ -67,7 +77,7 @@ int main()
     app.init();
 
     glfwSetCursorPosCallback(window, mouseCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     double last = glfwGetTime();
 
@@ -80,6 +90,7 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
+        app.processOutsideButtonClick(window);
         app.update(delta);
         app.render();
 

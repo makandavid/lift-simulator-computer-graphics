@@ -62,7 +62,7 @@
     <ClInclude Include="Header\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
+    <ClInclude Include="Header\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
