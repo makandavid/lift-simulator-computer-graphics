@@ -294,7 +294,7 @@ void App::render()
     renderOutsideGround();
     renderBuilding();
     renderElevator();
-
+    renderButtons();
 
 
     testingWithButtons();
@@ -307,6 +307,7 @@ void App::renderOutsideGround()
         glm::vec3(0.0f, 0.0f, 0.0f),
         glm::vec3(groundSize, 0.0f, groundSize),
         colorGround,
+        renderer.texGrass,
         camera
     );
 
@@ -339,6 +340,7 @@ void App::renderBuilding()
                 floorDepth
             ),
             colorFloor,
+            renderer.texFloor,
             camera
         );
         renderer.drawCube(
@@ -353,6 +355,7 @@ void App::renderBuilding()
                 floorDepth
             ),
             colorFloor,
+            renderer.texFloor,
             camera
         );
 
@@ -368,6 +371,7 @@ void App::renderBuilding()
                 floorDepth - shaftSize - 0.6f
             ),
             colorFloor,
+            renderer.texFloor,
             camera
         );
 
@@ -379,18 +383,21 @@ void App::renderBuilding()
                 glm::vec3(0.0f - buildingWidth / 4 - 0.75f, y + floorHeight / 2, buildingDepth / 2),
                 glm::vec3(buildingWidth / 2 - 1.5f, floorHeight, 0.2f),
                 colorWall,
+                renderer.texWall,
                 camera
             );
             renderer.drawCube(
                 glm::vec3(0.0f + buildingWidth / 4 + 0.75f, y + floorHeight / 2, buildingDepth / 2),
                 glm::vec3(buildingWidth / 2 - 1.5f, floorHeight, 0.2f),
                 colorWall,
+                renderer.texWall,
                 camera
             );
             renderer.drawCube(
                 glm::vec3(0.0f, y + floorHeight - 0.75f, buildingDepth / 2),
                 glm::vec3(3.0f, floorHeight - 1.5f, 0.2f),
                 colorWall,
+                renderer.texWall,
                 camera
             );
         }
@@ -400,6 +407,7 @@ void App::renderBuilding()
                 glm::vec3(0.0f, y + floorHeight / 2, buildingDepth / 2),
                 glm::vec3(buildingWidth, floorHeight, 0.2f),
                 colorWall,
+                renderer.texWall,
                 camera
             );
         }
@@ -408,6 +416,7 @@ void App::renderBuilding()
             glm::vec3(0.0f, y + floorHeight / 2, -buildingDepth / 2),
             glm::vec3(buildingWidth, floorHeight, 0.2f),
             colorWall,
+            renderer.texWall,
             camera
         );
         // left wall
@@ -415,6 +424,7 @@ void App::renderBuilding()
             glm::vec3(-buildingWidth / 2, y + floorHeight / 2, 0.0f),
             glm::vec3(0.2f, floorHeight, buildingDepth),
             colorWall,
+            renderer.texWall,
             camera
         );
         // right wall
@@ -422,6 +432,7 @@ void App::renderBuilding()
             glm::vec3(buildingWidth / 2, y + floorHeight / 2, 0.0f),
             glm::vec3(0.2f, floorHeight, buildingDepth),
             colorWall,
+            renderer.texWall,
             camera
         );
     }
@@ -446,6 +457,7 @@ void App::renderElevator()
         glm::vec3(shaftX, totalHeight / 2 - floorHeight, shaftZ - halfShaft),
         glm::vec3(shaftSize, totalHeight, shaftWallThickness),
         colorShaft,
+        renderer.texShaft,
         camera
     );
 
@@ -454,6 +466,7 @@ void App::renderElevator()
         glm::vec3(shaftX - halfShaft, totalHeight / 2 - floorHeight, shaftZ),
         glm::vec3(shaftWallThickness, totalHeight, shaftSize),
         colorShaft,
+        renderer.texShaft,
         camera
     );
 
@@ -462,6 +475,7 @@ void App::renderElevator()
         glm::vec3(shaftX + halfShaft, totalHeight / 2 - floorHeight, shaftZ),
         glm::vec3(shaftWallThickness, totalHeight, shaftSize),
         colorShaft,
+        renderer.texShaft,
         camera
     );
 
@@ -477,6 +491,7 @@ void App::renderElevator()
             glm::vec3(shaftX, y, shaftZ + halfShaft),
             glm::vec3(shaftSize, floorHeight, shaftWallThickness),
             colorShaft,
+            renderer.texShaft,
             camera
         );
     }
@@ -495,6 +510,7 @@ void App::renderElevator()
             shaftSize
         ),
         colorFloor,
+        renderer.texFloor,
         camera
     );
     // ceiling
@@ -510,6 +526,7 @@ void App::renderElevator()
             shaftSize
         ),
         colorFloor,
+        renderer.texFloor,
         camera
     );
     // back wall
@@ -517,6 +534,7 @@ void App::renderElevator()
         glm::vec3(shaftX, elevatorY, shaftZ - halfShaft),
         glm::vec3(shaftSize, floorHeight, elevatorWallThickness),
         colorElevator,
+        renderer.texElevator,
         camera
     );
 
@@ -525,6 +543,7 @@ void App::renderElevator()
         glm::vec3(shaftX - halfShaft, elevatorY, shaftZ - 0.1f),
         glm::vec3(elevatorWallThickness, floorHeight, shaftSize + 0.5f),
         colorElevator,
+        renderer.texElevator,
         camera
     );
 
@@ -533,6 +552,7 @@ void App::renderElevator()
         glm::vec3(shaftX + halfShaft, elevatorY, shaftZ - 0.1f),
         glm::vec3(elevatorWallThickness, floorHeight, shaftSize + 0.5f),
         colorElevator,
+        renderer.texElevator,
         camera
     );
 
@@ -547,6 +567,7 @@ void App::renderElevator()
         ),
         glm::vec3(sideWidth, floorHeight, elevatorWallThickness),
         colorElevator,
+        renderer.texElevator,
         camera
     );
 
@@ -558,6 +579,7 @@ void App::renderElevator()
         ),
         glm::vec3(sideWidth, floorHeight, elevatorWallThickness),
         colorElevator,
+        renderer.texElevator,
         camera
     );
 
@@ -583,6 +605,7 @@ void App::renderElevator()
         ),
         glm::vec3(currentWidth, doorHeight, doorDepth),
         colorElevatorDoor,
+        renderer.texDoor,
         camera
     );
     // right door
@@ -594,9 +617,109 @@ void App::renderElevator()
         ),
         glm::vec3(currentWidth, doorHeight, doorDepth),
         colorElevatorDoor,
+        renderer.texDoor,
         camera
     );
 }
+
+void App::buildElevatorButtons()
+{
+    elevatorButtons.clear();
+
+    float panelX = 1.8f;
+    float startY = elevatorY;
+    float z1 = -6.5f;
+    float z2 = z1 + 0.1;
+
+    float dy = 0.1f;
+
+    glm::vec3 size(0.01f, 0.1f, 0.1f);
+
+    elevatorButtons.push_back({ {panelX,startY,z1}, size,  FLOOR_SU });
+    elevatorButtons.push_back({ {panelX,startY,z2}, size, FLOOR_PR });
+    elevatorButtons.push_back({ {panelX,startY - dy,z1}, size, FLOOR_1 });
+    elevatorButtons.push_back({ {panelX,startY - dy,z2}, size, FLOOR_2 });
+    elevatorButtons.push_back({ {panelX,startY - 2 * dy,z1}, size, FLOOR_3 });
+    elevatorButtons.push_back({ {panelX,startY - 2 * dy,z2}, size, FLOOR_4 });
+    elevatorButtons.push_back({ {panelX,startY - 3 * dy,z1}, size, FLOOR_5 });
+    elevatorButtons.push_back({ {panelX,startY - 3 * dy,z2}, size, FLOOR_6 });
+
+    elevatorButtons.push_back({ {panelX,startY - 4 * dy,z1}, size, DOOR_OPEN });
+    elevatorButtons.push_back({ {panelX,startY - 4 * dy,z2}, size, DOOR_CLOSE });
+    elevatorButtons.push_back({ {panelX,startY - 5 * dy,z1}, size, STOP });
+    elevatorButtons.push_back({ {panelX,startY - 5 * dy,z2}, size, FAN });
+}
+
+void App::buildOutsideButtons()
+{
+    outsideButtons.clear();
+
+    for (int i = -1; i < 7; i++)
+    {
+        float y = i * floorHeight + 1.0f;
+
+        outsideButtons.push_back({
+            glm::vec3(1.2f, y, -5.6f),
+            glm::vec3(0.1f, 0.1f, 0.01f),
+            CALL_ELEVATOR
+            });
+    }
+}
+
+void App::renderButtons()
+{
+    buildElevatorButtons();
+    buildOutsideButtons();
+
+    for (auto& b : elevatorButtons)
+    {
+        GLuint tex = 0;
+
+        switch (b.action)
+        {
+            case ButtonAction::FLOOR_1:    tex = renderer.texBtn1; break;
+            case ButtonAction::FLOOR_2:    tex = renderer.texBtn2; break;
+            case ButtonAction::FLOOR_3:    tex = renderer.texBtn3; break;
+            case ButtonAction::FLOOR_4:    tex = renderer.texBtn4; break;
+            case ButtonAction::FLOOR_5:    tex = renderer.texBtn5; break;
+            case ButtonAction::FLOOR_6:    tex = renderer.texBtn6; break;
+            case ButtonAction::FLOOR_SU:  tex = renderer.texBtnSU; break;
+            case ButtonAction::FLOOR_PR:    tex = renderer.texBtnPR; break;
+            case ButtonAction::DOOR_OPEN:      tex = renderer.texBtnOpen; break;
+            case ButtonAction::DOOR_CLOSE:     tex = renderer.texBtnClose; break;
+            case ButtonAction::STOP:      tex = renderer.texBtnStop; break;
+            case ButtonAction::FAN:       tex = renderer.texBtnFan; break;
+            case ButtonAction::CALL_ELEVATOR: tex = renderer.texBtnOpen; break;
+        }
+
+        renderer.drawCube(
+            b.position,
+            b.size,
+            glm::vec3(1, 0, 0),
+            tex,
+            camera
+        );
+    }
+
+    for (auto& b : outsideButtons)
+    {
+        renderer.drawCube(
+            b.position,
+            b.size,
+            glm::vec3(1, 0, 0),
+            renderer.texBtnOpen,
+            camera
+        );
+    }
+
+}
+
+
+
+
+
+
+
 
 void App::testingWithButtons()
 {

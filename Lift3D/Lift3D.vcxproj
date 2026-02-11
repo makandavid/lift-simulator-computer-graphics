@@ -141,12 +141,36 @@
     <ClCompile Include="Source\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Header\App.h" />
     <ClInclude Include="Header\Camera.h" />
     <ClInclude Include="Header\Input.h" />
     <ClInclude Include="Header\Renderer.h" />
     <ClInclude Include="Header\stb_image.h" />
     <ClInclude Include="Header\Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\btn_1.png" />
+    <Image Include="Resources\btn_2.png" />
+    <Image Include="Resources\btn_3.png" />
+    <Image Include="Resources\btn_4.png" />
+    <Image Include="Resources\btn_5.png" />
+    <Image Include="Resources\btn_6.png" />
+    <Image Include="Resources\btn_close.png" />
+    <Image Include="Resources\btn_fan.png" />
+    <Image Include="Resources\btn_open.png" />
+    <Image Include="Resources\btn_PR.png" />
+    <Image Include="Resources\btn_stop.png" />
+    <Image Include="Resources\btn_SU.png" />
+    <Image Include="Resources\cursor_colored.png" />
+    <Image Include="Resources\cursor_normal.png" />
+    <Image Include="Resources\door.jpg" />
+    <Image Include="Resources\elevator.jpg" />
+    <Image Include="Resources\floor.jpg" />
+    <Image Include="Resources\grass.jpg" />
+    <Image Include="Resources\images.jfif" />
+    <Image Include="Resources\shaft.jpg" />
+    <Image Include="Resources\wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

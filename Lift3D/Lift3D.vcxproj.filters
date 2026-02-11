@@ -62,5 +62,73 @@
     <ClInclude Include="Header\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\door.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\elevator.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\floor.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\grass.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\images.jfif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\shaft.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\wall.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_close.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_fan.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_open.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_PR.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_stop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\btn_SU.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\cursor_colored.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\cursor_normal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

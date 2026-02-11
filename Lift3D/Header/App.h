@@ -1,6 +1,7 @@
 #pragma once
 #include "../Header/Camera.h"
 #include "../Header/Renderer.h"
+#include "../Button.h"
 #include <GLFW/glfw3.h>
 #include <vector>
 
@@ -51,21 +52,28 @@ public:
 	glm::vec3 colorElevatorDoor = glm::vec3(0.1f, 0.5f, 0.8f);
 
 
+	std::vector<ElevatorButton> elevatorButtons;
+	std::vector<ElevatorButton> outsideButtons;
+
+
 
 	void init();
 	void update(float deltaTime);
 	void render();
 
-private:
 	void renderOutsideGround();
 	void renderBuilding();
 	void renderElevator();
+	void renderButtons();
 
 	void addCubeCollider(glm::vec3 center, glm::vec3 size);
 	void buildColliders();
 	void collidesBuilding();
 	void collidesElevator();
 	bool isColliding(glm::vec3 pos);
+
+	void buildElevatorButtons();
+	void buildOutsideButtons();
 
 	void testingWithButtons();
 };

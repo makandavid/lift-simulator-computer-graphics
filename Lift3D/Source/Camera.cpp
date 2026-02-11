@@ -15,6 +15,12 @@ void Camera::update(GLFWwindow* window)
 
 glm::vec3 Camera::processInput(GLFWwindow* window, float deltaTime)
 {
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ||
+		glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		speed = 6.0f;
+	else
+		speed = 3.0f;
+
 	float velocity = speed * deltaTime;
 
 	glm::vec3 movement(0.0f);
