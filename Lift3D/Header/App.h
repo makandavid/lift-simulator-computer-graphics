@@ -4,6 +4,7 @@
 #include "../Header/Button.h"
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <queue>
 
 class App
 {
@@ -29,6 +30,7 @@ public:
 	float floorHeight = 3.0f;
 
 	int currentFloor = 0;
+	int elevatorFloor = 0;
 	float elevatorY = 0.0f;
 	float elevatorSpeed = 2.0f;
 
@@ -38,10 +40,16 @@ public:
 	float doorOffset = 0.0f;
 	float doorMaxOffset = 0.6f;
 	float doorSpeed = 2.0f;
+	float doorTimer = 0.0f;
 
 	bool doorOpening = false;
 	bool doorClosing = false;
 	bool doorOpen = false;
+	bool isStopped = false;
+
+	int nextTargetFloor = -1; // -1 means no pending floor to go to immediately after doors close
+	std::queue<int> floorQueue;
+
 
 	// colors
 	glm::vec3 colorGround = glm::vec3(0.3f, 0.7f, 0.3f);    // green
@@ -77,6 +85,7 @@ public:
 	void collidesBuilding();
 	void collidesElevator();
 	bool isColliding(glm::vec3 pos);
+	bool isPlayerInsideElevator();
 
 	void buildElevatorButtons();
 	void buildOutsideButtons();

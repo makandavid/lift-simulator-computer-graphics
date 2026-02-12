@@ -7,6 +7,7 @@ void App::init()
     renderer.init();
 
     cursorNormal = loadImageToCursor("Resources/cursor_normal.png");
+    cursorFan = loadImageToCursor("Resources/cursor_colored.png");
     glfwSetCursor(window, cursorNormal);
 
 
@@ -43,6 +44,50 @@ void App::update(float deltaTime)
 
     camera.position = pos;
 
+    for (auto& b : elevatorButtons)
+    {
+        if (!b.pressed)
+            continue;
+
+        switch (b.action)
+        {
+        case DOOR_OPEN:
+            if (!elevatorMoving && !doorOpening && !doorOpen)
+            {
+                doorClosing = false;
+                doorOpening = true;
+            }
+            break;
+
+        case DOOR_CLOSE:
+            if (doorOpen && !doorClosing)
+            {
+                doorOpen = false;
+                doorClosing = true;
+            }
+            break;
+
+        case STOP:
+            elevatorMoving = false;
+            doorOpen = false;
+            doorOpening = false;
+            doorClosing = false;
+            isStopped = true;
+            floorQueue = std::queue<int>();
+            break;
+
+        case FAN:
+            glfwSetCursor(window, cursorFan);
+            break;
+
+        default:
+            break;
+        }
+
+        b.pressed = false;
+    }
+
+
     if (elevatorMoving)
     {
         float targetY = targetFloor * floorHeight + floorHeight / 2;
@@ -50,22 +95,28 @@ void App::update(float deltaTime)
         if (elevatorY < targetY)
         {
             elevatorY += elevatorSpeed * deltaTime;
-            //camera.position.y += elevatorSpeed * deltaTime;
+            if (isPlayerInsideElevator())
+                camera.position.y += elevatorSpeed * deltaTime;
         }
         else if (elevatorY > targetY)
         {
             elevatorY -= elevatorSpeed * deltaTime;
-            //camera.position.y -= elevatorSpeed * deltaTime;
+            if (isPlayerInsideElevator())
+                camera.position.y -= elevatorSpeed * deltaTime;
         }
 
         if (fabs(elevatorY - targetY) < 0.05f)
         {
             elevatorY = targetY;
             elevatorMoving = false;
-            currentFloor = targetFloor;
+            elevatorFloor = targetFloor;
+            if (isPlayerInsideElevator())
+                currentFloor = targetFloor;
+            doorOpening = true;
+            doorClosing = false;
+            doorOpen = false;
         }
     }
-
     if (doorOpening)
     {
         doorOffset += doorSpeed * deltaTime;
@@ -74,6 +125,17 @@ void App::update(float deltaTime)
             doorOffset = doorMaxOffset;
             doorOpening = false;
             doorOpen = true;
+            doorTimer = 5.0f;
+        }
+    }
+    if (doorOpen && !doorClosing)
+    {
+        doorTimer -= deltaTime;
+        if (doorTimer <= 0)
+        {
+            doorTimer = 0;
+            doorOpen = false;
+            doorClosing = true;
         }
     }
     if (doorClosing)
@@ -84,10 +146,28 @@ void App::update(float deltaTime)
             doorOffset = 0.0f;
             doorClosing = false;
             doorOpen = false;
+            glfwSetCursor(window, cursorNormal);
+
+            while (!floorQueue.empty())
+            {
+                int nextFloor = floorQueue.front();
+                floorQueue.pop();
+
+                if (nextFloor != elevatorFloor)
+                {
+                    targetFloor = nextFloor;
+                    elevatorMoving = true;
+                    break;
+                }
+            }
         }
     }
-    // TODO prevent elevator from moving
-
+    if (!floorQueue.empty() && !doorOpening && !doorOpen && !doorClosing && !elevatorMoving && !isStopped)
+    {
+        targetFloor = floorQueue.front();
+        floorQueue.pop();
+        elevatorMoving = true;
+    }
 }
 
 void App::addCubeCollider(glm::vec3 center, glm::vec3 size)
@@ -198,7 +278,7 @@ void App::collidesElevator()
     {
         float y = f * floorHeight + floorHeight / 2;
 
-        if (f == currentFloor && !elevatorMoving)
+        if (f == elevatorFloor && !elevatorMoving)
             continue;
 
         addCubeCollider(
@@ -489,7 +569,7 @@ void App::renderElevator()
         float y = f * floorHeight + floorHeight / 2;
 
         // draw hole only on elevator floor
-        if (f == currentFloor && !elevatorMoving)
+        if (f == elevatorFloor && !elevatorMoving)
             continue;
 
         renderer.drawCube(
@@ -666,7 +746,7 @@ void App::buildOutsideButtons()
         outsideButtons.push_back({
             glm::vec3(1.2f, y, -5.6f),
             glm::vec3(0.1f, 0.1f, 0.01f),
-            CALL_ELEVATOR
+            i
             });
     }
 }
@@ -766,69 +846,110 @@ void App::processOutsideButtonClick(GLFWwindow* window)
             if (rayIntersectsAABB(rayOrigin, rayDir, min, max, t))
             {
                 if (t > 2.0f) return;
-                doorOpening = true;
-                doorClosing = false;
                 b.pressed = true;
+                if (b.action <= 6) {
+                    floorQueue.push(b.action);
+                    isStopped = false;
+                }
+                return;
+            }
+        }
+        for (auto& b : elevatorButtons)
+        {
+            glm::vec3 min = b.position - b.size * 0.5f;
+            glm::vec3 max = b.position + b.size * 0.5f;
+
+            if (rayIntersectsAABB(rayOrigin, rayDir, min, max, t))
+            {
+                if (t > 2.0f) return;
+                b.pressed = true;
+                if (b.action <= 6) {
+                    floorQueue.push(b.action);
+                    isStopped = false;
+                }
                 return;
             }
         }
     }
 }
 
+bool App::isPlayerInsideElevator()
+{
+    float shaftSize = 4.0f;
+    float shaftZ = (shaftSize - buildingDepth) / 2 + 0.2f;
+    float halfShaft = shaftSize / 2.0f;
+
+    // elevator box limits
+    float minX = -halfShaft;
+    float maxX = halfShaft;
+
+    float minZ = shaftZ - halfShaft;
+    float maxZ = shaftZ + halfShaft;
+
+    float minY = elevatorY - floorHeight / 2.0f;
+    float maxY = elevatorY + floorHeight / 2.0f;
+
+    const glm::vec3& p = camera.position;
+
+    return
+        p.x >= minX && p.x <= maxX &&
+        p.y >= minY && p.y <= maxY &&
+        p.z >= minZ && p.z <= maxZ;
+}
 
 
 void App::testingWithButtons()
 {
-    // TESTING
-    if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
-    {
-        targetFloor = -1;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
-    {
-        targetFloor = 0;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-    {
-        targetFloor = 1;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-    {
-        targetFloor = 2;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-    {
-        targetFloor = 3;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-    {
-        targetFloor = 4;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-    {
-        targetFloor = 5;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-    {
-        targetFloor = 6;
-        elevatorMoving = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-    {
-        doorOpening = true;
-        doorClosing = false;
-    }
-    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-    {
-        doorClosing = true;
-        doorOpening = false;
-    }
+    //// TESTING
+    //if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
+    //{
+    //    targetFloor = -1;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+    //{
+    //    targetFloor = 0;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    //{
+    //    targetFloor = 1;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    //{
+    //    targetFloor = 2;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+    //{
+    //    targetFloor = 3;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+    //{
+    //    targetFloor = 4;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+    //{
+    //    targetFloor = 5;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+    //{
+    //    targetFloor = 6;
+    //    elevatorMoving = true;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+    //{
+    //    doorOpening = true;
+    //    doorClosing = false;
+    //}
+    //if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+    //{
+    //    doorClosing = true;
+    //    doorOpening = false;
+    //}
 
 }
