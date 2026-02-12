@@ -54,30 +54,33 @@ float cubeVertices[] = {
      -0.5f,-0.5f,-0.5f,     0,-1,0,           1,1
 };
 
-
+Renderer::Renderer()
+    : shader("Shaders/basic.vert", "Shaders/basic.frag")
+{
+}
 
 void Renderer::init()
 {
-    shader = createShader("Shaders/basic.vert", "Shaders/basic.frag");
+    //shader = createShader("Shaders/basic.vert", "Shaders/basic.frag");
 
-    preprocessTexture(texWall, "Resources/wall.jpg");
-    preprocessTexture(texFloor, "Resources/floor.jpg");
-    preprocessTexture(texShaft, "Resources/shaft.jpg");
-    preprocessTexture(texElevator, "Resources/elevator.jpg");
-    preprocessTexture(texDoor, "Resources/door.jpg");
-    preprocessTexture(texGrass, "Resources/grass.jpg");
-    preprocessTexture(texBtn1, "Resources/btn_1.png");
-    preprocessTexture(texBtn2, "Resources/btn_2.png");
-    preprocessTexture(texBtn3, "Resources/btn_3.png");
-    preprocessTexture(texBtn4, "Resources/btn_4.png");
-    preprocessTexture(texBtn5, "Resources/btn_5.png");
-    preprocessTexture(texBtn6, "Resources/btn_6.png");
-    preprocessTexture(texBtnSU, "Resources/btn_SU.png");
-    preprocessTexture(texBtnPR, "Resources/btn_PR.png");
-    preprocessTexture(texBtnFan, "Resources/btn_fan.png");
-    preprocessTexture(texBtnOpen, "Resources/btn_open.png");
-    preprocessTexture(texBtnClose, "Resources/btn_close.png");
-    preprocessTexture(texBtnStop, "Resources/btn_stop.png");
+    preprocessTexture(texWall, "Resources/textures/wall.jpg");
+    preprocessTexture(texFloor, "Resources/textures/floor.jpg");
+    preprocessTexture(texShaft, "Resources/textures/shaft.jpg");
+    preprocessTexture(texElevator, "Resources/textures/elevator.jpg");
+    preprocessTexture(texDoor, "Resources/textures/door.jpg");
+    preprocessTexture(texGrass, "Resources/textures/grass.jpg");
+    preprocessTexture(texBtn1, "Resources/textures/btn_1.png");
+    preprocessTexture(texBtn2, "Resources/textures/btn_2.png");
+    preprocessTexture(texBtn3, "Resources/textures/btn_3.png");
+    preprocessTexture(texBtn4, "Resources/textures/btn_4.png");
+    preprocessTexture(texBtn5, "Resources/textures/btn_5.png");
+    preprocessTexture(texBtn6, "Resources/textures/btn_6.png");
+    preprocessTexture(texBtnSU, "Resources/textures/btn_SU.png");
+    preprocessTexture(texBtnPR, "Resources/textures/btn_PR.png");
+    preprocessTexture(texBtnFan, "Resources/textures/btn_fan.png");
+    preprocessTexture(texBtnOpen, "Resources/textures/btn_open.png");
+    preprocessTexture(texBtnClose, "Resources/textures/btn_close.png");
+    preprocessTexture(texBtnStop, "Resources/textures/btn_stop.png");
 
 
     glGenVertexArrays(1, &vao);
@@ -105,53 +108,56 @@ void Renderer::init()
 
 }
 
-void Renderer::drawCube(glm::vec3 pos, glm::vec3 size, glm::vec3 color, GLuint texture, Camera& cam)
+void Renderer::drawCube(glm::vec3 pos,
+    glm::vec3 size,
+    glm::vec3 color,
+    GLuint texture,
+    Camera& cam)
 {
-    glUseProgram(shader);
+    shader.use();
 
-    glUniform3f(glGetUniformLocation(shader, "lightPos"),
-        0.0f, 50.0f, 0.0f);
-
-    glUniform3f(glGetUniformLocation(shader, "viewPos"),
-        cam.position.x,
-        cam.position.y,
-        cam.position.z);
-
-    glUniform3f(glGetUniformLocation(shader, "lightColor"),
-        1.0f, 1.0f, 1.0f);
-
-    glUniform3f(glGetUniformLocation(shader, "objectColor"),
-        1.0f, 1.0f, 1.0f);
-
+    shader.setVec3("lightPos", { 0.0f, 50.0f, 0.0f });
+    shader.setVec3("viewPos", cam.position);
+    shader.setVec3("lightColor", { 1.0f, 1.0f, 1.0f });
+    shader.setVec3("objectColor", { 1.0f, 1.0f, 1.0f });
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
-
     model = glm::scale(model, size);
 
-    auto view = cam.getView();
-    auto proj = cam.getProjection();
+    shader.setMat4("model", model);
+    shader.setMat4("view", cam.getView());
+    shader.setMat4("proj", cam.getProjection());
 
-    glUniformMatrix4fv(
-        glGetUniformLocation(shader, "model"),
-        1, GL_FALSE, &model[0][0]);
-
-    glUniformMatrix4fv(
-        glGetUniformLocation(shader, "view"),
-        1, GL_FALSE, &view[0][0]);
-
-    glUniformMatrix4fv(
-        glGetUniformLocation(shader, "proj"),
-        1, GL_FALSE, &proj[0][0]);
-
-    glUniform3fv(
-        glGetUniformLocation(shader, "uColor"), 
-        1, &color[0]);
+    shader.setVec3("uColor", color);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-
-    glUniform1i(glGetUniformLocation(shader, "tex"), 0);
+    shader.setInt("tex", 0);
 
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
+
+
+void Renderer::drawModel(Model& model, glm::vec3 position, float scale, Camera& camera, glm::vec3 rotation)
+{
+    shader.use();
+
+    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), position);
+
+    if (rotation.x != 0.0f)
+        modelMat = glm::rotate(modelMat, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    if (rotation.y != 0.0f)
+        modelMat = glm::rotate(modelMat, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    if (rotation.z != 0.0f)
+        modelMat = glm::rotate(modelMat, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    modelMat = glm::scale(modelMat, glm::vec3(scale));
+
+    shader.setMat4("model", modelMat);
+    shader.setMat4("view", camera.getView());
+    shader.setMat4("projection", camera.getProjection());
+
+    model.Draw(shader);
+}
+

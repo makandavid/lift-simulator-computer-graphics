@@ -1,10 +1,11 @@
 #pragma once
 #include "Camera.h"
+#include "Model.h"
 
 class Renderer
 {
     unsigned vao, vbo;
-    unsigned shader;
+    Shader shader;
 
 
 public:
@@ -28,6 +29,9 @@ public:
     GLuint texBtnStop;
     GLuint texBtnFan;
 
+    Renderer();
     void init();
     void drawCube(glm::vec3 pos, glm::vec3 size, glm::vec3 color, GLuint texture, Camera& cam);
+    void drawModel(Model& model, glm::vec3 position, float scale, Camera& camera, glm::vec3 rotation);
+
 };

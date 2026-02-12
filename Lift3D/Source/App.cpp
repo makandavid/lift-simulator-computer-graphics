@@ -1,15 +1,21 @@
 #include <GL/glew.h>
 #include "../Header/App.h"
 #include "../Header/Util.h"
+#include "../Header/Model.h"
 
 void App::init()
 {
     renderer.init();
 
-    cursorNormal = loadImageToCursor("Resources/cursor_normal.png");
-    cursorFan = loadImageToCursor("Resources/cursor_colored.png");
+    cursorNormal = loadImageToCursor("Resources/textures/cursor_normal.png");
+    cursorFan = loadImageToCursor("Resources/textures/cursor_colored.png");
     glfwSetCursor(window, cursorNormal);
 
+    plantModels[0] = Model("Resources/models/eb_house_plant_01.obj");
+    plantModels[1] = Model("Resources/models/potted_plant_obj.obj");
+    plantModels[2] = Model("Resources/models/plant.obj");
+
+    lightBulb = Model("Resources/models/halobulb.obj");
 
     currentFloor = 0;
     elevatorY = currentFloor * floorHeight + floorHeight / 2;
@@ -380,9 +386,8 @@ void App::render()
     renderBuilding();
     renderElevator();
     renderButtons();
-
-
-    testingWithButtons();
+    renderPlants();
+    renderBulbs();
 }
 
 void App::renderOutsideGround()
@@ -799,6 +804,63 @@ void App::renderButtons()
 
 }
 
+void App::renderPlants()
+{
+    float shaftSize = 4.0f;
+    float shaftZ = (shaftSize - buildingDepth) / 2 + 0.2f;
+    float halfShaft = shaftSize / 2.0f;
+
+    float leftX = -shaftSize / 2 + 0.6f;
+    float rightX = shaftSize / 2 - 0.6f;
+
+    float plantZ = shaftZ + halfShaft + 1.5f;
+
+    int modelIndex = 0;
+    float scale = 1;
+
+    int plantIndex = 0;
+
+    for (int f = -1; f < floorCount - 1; f++)
+    {
+        float y = f * floorHeight + 0.1f;
+
+        float scale = (plantIndex % 3 == 2) ? 0.1f : 0.01f;
+
+        Model model = plantModels[plantIndex % 3];
+
+        plants[plantIndex++] = { model, { leftX,  y, plantZ }, scale };
+        plants[plantIndex++] = { model, { rightX, y, plantZ }, scale };
+    }
+
+    for (auto& p : plants)
+    {
+        renderer.drawModel(p.model, p.position, p.scale, camera, glm::vec3(0.0f, 0.0f, 0.0f));
+    }
+}
+
+void App::renderBulbs()
+{
+    float shaftSize = 4.0f;
+    float shaftZ = (shaftSize - buildingDepth) / 2 + 0.2f;
+
+    std::vector<glm::vec3> lightPositions;
+
+    for (int i = -1; i < floorCount - 1; i++) {
+        float y = i * floorHeight + floorHeight - 0.1f;
+        lightPositions.push_back(glm::vec3(0.0f, y, 0.0f));
+    }
+
+    for (auto& pos : lightPositions) {
+        renderer.drawModel(lightBulb, pos, 0.05f, camera, glm::vec3(180.0f, 0.0f, 0.0f));
+    }
+
+
+    // Elevator ceiling light moves with elevator
+    glm::vec3 elevatorLightPos(0.0f, elevatorY + 0.9f, shaftZ); // Y offset inside elevator
+    renderer.drawModel(lightBulb, elevatorLightPos, 0.05f, camera, glm::vec3(180.0f, 0.0f, 0.0f));
+
+
+}
 
 
 

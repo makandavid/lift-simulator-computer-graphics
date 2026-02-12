@@ -58,8 +58,8 @@ int main()
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-    //GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Lift 3D", monitor, nullptr);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Lift 3D", NULL, nullptr);
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Lift 3D", monitor, nullptr);
+    //GLFWwindow* window = glfwCreateWindow(800, 600, "Lift 3D", NULL, nullptr);
     if (!window) return endProgram("Failed window");
 
     glfwMakeContextCurrent(window);

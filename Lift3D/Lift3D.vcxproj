@@ -145,38 +145,42 @@
     <ClInclude Include="Header\Button.h" />
     <ClInclude Include="Header\Camera.h" />
     <ClInclude Include="Header\Input.h" />
+    <ClInclude Include="Header\Mesh.h" />
+    <ClInclude Include="Header\Model.h" />
     <ClInclude Include="Header\Renderer.h" />
+    <ClInclude Include="Header\Shader.h" />
     <ClInclude Include="Header\stb_image.h" />
     <ClInclude Include="Header\Util.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\btn_1.png" />
-    <Image Include="Resources\btn_2.png" />
-    <Image Include="Resources\btn_3.png" />
-    <Image Include="Resources\btn_4.png" />
-    <Image Include="Resources\btn_5.png" />
-    <Image Include="Resources\btn_6.png" />
-    <Image Include="Resources\btn_close.png" />
-    <Image Include="Resources\btn_fan.png" />
-    <Image Include="Resources\btn_open.png" />
-    <Image Include="Resources\btn_PR.png" />
-    <Image Include="Resources\btn_stop.png" />
-    <Image Include="Resources\btn_SU.png" />
-    <Image Include="Resources\cursor_colored.png" />
-    <Image Include="Resources\cursor_normal.png" />
-    <Image Include="Resources\door.jpg" />
-    <Image Include="Resources\elevator.jpg" />
-    <Image Include="Resources\floor.jpg" />
-    <Image Include="Resources\grass.jpg" />
-    <Image Include="Resources\images.jfif" />
-    <Image Include="Resources\shaft.jpg" />
-    <Image Include="Resources\wall.jpg" />
+    <Image Include="Resources\textures\btn_1.png" />
+    <Image Include="Resources\textures\btn_2.png" />
+    <Image Include="Resources\textures\btn_3.png" />
+    <Image Include="Resources\textures\btn_4.png" />
+    <Image Include="Resources\textures\btn_5.png" />
+    <Image Include="Resources\textures\btn_6.png" />
+    <Image Include="Resources\textures\btn_close.png" />
+    <Image Include="Resources\textures\btn_fan.png" />
+    <Image Include="Resources\textures\btn_open.png" />
+    <Image Include="Resources\textures\btn_PR.png" />
+    <Image Include="Resources\textures\btn_stop.png" />
+    <Image Include="Resources\textures\btn_SU.png" />
+    <Image Include="Resources\textures\cursor_colored.png" />
+    <Image Include="Resources\textures\cursor_normal.png" />
+    <Image Include="Resources\textures\door.jpg" />
+    <Image Include="Resources\textures\elevator.jpg" />
+    <Image Include="Resources\textures\floor.jpg" />
+    <Image Include="Resources\textures\grass.jpg" />
+    <Image Include="Resources\textures\shaft.jpg" />
+    <Image Include="Resources\textures\wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\glfw.3.4.0\build\native\glfw.targets" Condition="Exists('packages\glfw.3.4.0\build\native\glfw.targets')" />
     <Import Project="packages\glew-2.2.0.2.2.0.1\build\native\glew-2.2.0.targets" Condition="Exists('packages\glew-2.2.0.2.2.0.1\build\native\glew-2.2.0.targets')" />
     <Import Project="packages\glm.1.0.3\build\native\glm.targets" Condition="Exists('packages\glm.1.0.3\build\native\glm.targets')" />
+    <Import Project="packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
+    <Import Project="packages\Assimp.3.0.0\build\native\Assimp.targets" Condition="Exists('packages\Assimp.3.0.0\build\native\Assimp.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -185,5 +189,7 @@
     <Error Condition="!Exists('packages\glfw.3.4.0\build\native\glfw.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\glfw.3.4.0\build\native\glfw.targets'))" />
     <Error Condition="!Exists('packages\glew-2.2.0.2.2.0.1\build\native\glew-2.2.0.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\glew-2.2.0.2.2.0.1\build\native\glew-2.2.0.targets'))" />
     <Error Condition="!Exists('packages\glm.1.0.3\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\glm.1.0.3\build\native\glm.targets'))" />
+    <Error Condition="!Exists('packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets'))" />
+    <Error Condition="!Exists('packages\Assimp.3.0.0\build\native\Assimp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Assimp.3.0.0\build\native\Assimp.targets'))" />
   </Target>
 </Project>

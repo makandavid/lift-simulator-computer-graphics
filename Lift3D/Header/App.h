@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <queue>
+#include "Model.h"
 
 class App
 {
@@ -59,6 +60,17 @@ public:
 	glm::vec3 colorElevator = glm::vec3(0.1f, 0.7f, 0.8f);
 	glm::vec3 colorElevatorDoor = glm::vec3(0.1f, 0.5f, 0.8f);
 
+	Model plantModels[3];
+	struct PlantInstance
+	{
+		Model model;
+		glm::vec3 position;
+		float scale;
+	};
+	PlantInstance plants[2 * 8];
+
+	Model lightBulb;
+
 
 	std::vector<ElevatorButton> elevatorButtons;
 	std::vector<ElevatorButton> outsideButtons;
@@ -79,6 +91,8 @@ public:
 	void renderBuilding();
 	void renderElevator();
 	void renderButtons();
+	void renderPlants();
+	void renderBulbs();
 
 	void addCubeCollider(glm::vec3 center, glm::vec3 size);
 	void buildColliders();
