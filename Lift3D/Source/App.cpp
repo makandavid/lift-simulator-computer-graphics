@@ -86,7 +86,6 @@ void App::update(float deltaTime)
             doorOpening = false;
             doorClosing = false;
             isStopped = true;
-            floorQueue = std::queue<int>();
             b.pressed = false;
             break;
 
@@ -221,13 +220,6 @@ void App::collidesBuilding()
     for (int i = -1; i < 7; i++)
     {
         float y = i * floorHeight;
-
-        // commented out for testing reasons
-        // floor
-        /*addCubeCollider(
-            glm::vec3(0.0f, y, 0.0f),
-            glm::vec3(buildingWidth + 0.5f, 0.1f, buildingDepth + 0.5f)
-        );*/
 
         // front wall
         if (i == 0)
@@ -422,16 +414,51 @@ void App::render()
 
 void App::renderOutsideGround()
 {
-    // outside ground
+    float halfWidth = buildingWidth / 2.0f;
+    float halfDepth = buildingDepth / 2.0f;
+    float groundHeight = 0.0f; // y position
+    float groundThickness = 0.1f;
+
+    float groundSizeX = 50.0f; // total ground size along X
+    float groundSizeZ = 50.0f; // total ground size along Z
+
+    // FRONT strip (in front of building)
     renderer.drawCube(
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(groundSize, 0.0f, groundSize),
+        glm::vec3(0.0f, groundHeight, -buildingDepth + halfDepth / 4 - 0.1f),
+        glm::vec3(groundSizeX, groundThickness, groundSizeZ / 2 - halfDepth),
         colorGround,
         renderer.texGrass,
         camera
     );
 
+    // BACK strip (behind building)
+    renderer.drawCube(
+        glm::vec3(0.0f, groundHeight, buildingDepth - halfDepth / 4 + 0.1f),
+        glm::vec3(groundSizeX, groundThickness, groundSizeZ / 2 - halfDepth),
+        colorGround,
+        renderer.texGrass,
+        camera
+    );
+
+    // LEFT strip (left of building)
+    renderer.drawCube(
+        glm::vec3(-buildingWidth + halfWidth / 4 + 0.1f, groundHeight, 0.0f),
+        glm::vec3(groundSizeX / 2 - halfWidth + 0.2f, groundThickness, buildingDepth + 0.2f),
+        colorGround,
+        renderer.texGrass,
+        camera
+    );
+
+    // RIGHT strip (right of building)
+    renderer.drawCube(
+        glm::vec3(buildingWidth - halfWidth / 4 - 0.1f, groundHeight, 0.0f),
+        glm::vec3(groundSizeX / 2 - halfWidth + 0.2f, groundThickness, buildingDepth + 0.2f),
+        colorGround,
+        renderer.texGrass,
+        camera
+    );
 }
+
 
 void App::renderBuilding()
 {
@@ -1079,62 +1106,4 @@ int App::actionToFloor(ButtonAction a)
     case FLOOR_6:  return 6;
     default:       return 999;
     }
-}
-
-
-
-void App::testingWithButtons()
-{
-    //// TESTING
-    //if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
-    //{
-    //    targetFloor = -1;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
-    //{
-    //    targetFloor = 0;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-    //{
-    //    targetFloor = 1;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-    //{
-    //    targetFloor = 2;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-    //{
-    //    targetFloor = 3;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-    //{
-    //    targetFloor = 4;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-    //{
-    //    targetFloor = 5;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-    //{
-    //    targetFloor = 6;
-    //    elevatorMoving = true;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-    //{
-    //    doorOpening = true;
-    //    doorClosing = false;
-    //}
-    //if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-    //{
-    //    doorClosing = true;
-    //    doorOpening = false;
-    //}
-
 }

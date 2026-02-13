@@ -135,7 +135,6 @@
   <ItemGroup>
     <ClCompile Include="Source\App.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
-    <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\Util.cpp" />
@@ -144,7 +143,6 @@
     <ClInclude Include="Header\App.h" />
     <ClInclude Include="Header\Button.h" />
     <ClInclude Include="Header\Camera.h" />
-    <ClInclude Include="Header\Input.h" />
     <ClInclude Include="Header\Mesh.h" />
     <ClInclude Include="Header\Model.h" />
     <ClInclude Include="Header\Renderer.h" />

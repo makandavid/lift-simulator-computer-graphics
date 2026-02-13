@@ -61,8 +61,6 @@ Renderer::Renderer()
 
 void Renderer::init()
 {
-    //shader = createShader("Shaders/basic.vert", "Shaders/basic.frag");
-
     preprocessTexture(texWall, "Resources/textures/wall.jpg");
     preprocessTexture(texFloor, "Resources/textures/floor.jpg");
     preprocessTexture(texShaft, "Resources/textures/shaft.jpg");

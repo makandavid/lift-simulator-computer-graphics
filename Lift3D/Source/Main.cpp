@@ -59,7 +59,6 @@ int main()
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
     GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Lift 3D", monitor, nullptr);
-    //GLFWwindow* window = glfwCreateWindow(800, 600, "Lift 3D", NULL, nullptr);
     if (!window) return endProgram("Failed window");
 
     glfwMakeContextCurrent(window);
@@ -90,6 +89,14 @@ int main()
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+            glEnable(GL_CULL_FACE);
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+            glDisable(GL_CULL_FACE);
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+            glEnable(GL_DEPTH_TEST);
+        if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+            glDisable(GL_DEPTH_TEST);
 
         app.processButtonClick(window);
         app.update(delta);

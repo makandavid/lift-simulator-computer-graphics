@@ -53,7 +53,7 @@ public:
 	std::queue<int> floorQueue;
 
 
-	// colors
+	// colors if texture not used
 	glm::vec3 colorGround = glm::vec3(0.3f, 0.7f, 0.3f);    // green
 	glm::vec3 colorFloor = glm::vec3(0.7f, 0.7f, 0.7f);    // light gray
 	glm::vec3 colorWall = glm::vec3(0.6f, 0.6f, 0.8f);    // bluish

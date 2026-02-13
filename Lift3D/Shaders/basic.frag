@@ -41,7 +41,7 @@ void main()
         float distance = length(lights[i].position - FragPos);
         float attenuation = 1.0 / (1.0 + 0.09*distance + 0.03*distance*distance);
 
-        vec3 ambient = 0.0 * lights[i].color;
+        vec3 ambient = 0.2 * lights[i].color;
         vec3 diffuse = diff * lights[i].color;
 
         result += (ambient + diffuse) * attenuation;
