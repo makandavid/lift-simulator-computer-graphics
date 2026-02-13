@@ -29,9 +29,19 @@ public:
     GLuint texBtnStop;
     GLuint texBtnFan;
 
+    struct PointLight
+    {
+        glm::vec3 position;
+        glm::vec3 color;
+    };
+    std::vector<PointLight> pointLights;
+
     Renderer();
     void init();
     void drawCube(glm::vec3 pos, glm::vec3 size, glm::vec3 color, GLuint texture, Camera& cam);
     void drawModel(Model& model, glm::vec3 position, float scale, Camera& camera, glm::vec3 rotation);
 
+    void clearLights();
+    void addLight(glm::vec3 pos, glm::vec3 color);
+    void uploadLights(Camera& cam);
 };

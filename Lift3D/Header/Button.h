@@ -23,6 +23,5 @@ enum ButtonAction
     DOOR_OPEN,
     DOOR_CLOSE,
     STOP,
-    FAN,
-    CALL_ELEVATOR
+    FAN
 };

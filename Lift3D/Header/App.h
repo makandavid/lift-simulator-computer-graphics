@@ -47,6 +47,7 @@ public:
 	bool doorClosing = false;
 	bool doorOpen = false;
 	bool isStopped = false;
+	bool isFanOn = false;
 
 	int nextTargetFloor = -1; // -1 means no pending floor to go to immediately after doors close
 	std::queue<int> floorQueue;
@@ -79,7 +80,7 @@ public:
 	GLFWcursor* cursorFan = nullptr;
 
 	bool rayIntersectsCube(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 cubeCenter, glm::vec3 cubeSize);
-	void processOutsideButtonClick(GLFWwindow* window);
+	void processButtonClick(GLFWwindow* window);
 
 
 
@@ -94,15 +95,21 @@ public:
 	void renderPlants();
 	void renderBulbs();
 
+	void collectBulbLights();
+	void collectButtonLights();
+
 	void addCubeCollider(glm::vec3 center, glm::vec3 size);
 	void buildColliders();
 	void collidesBuilding();
 	void collidesElevator();
 	bool isColliding(glm::vec3 pos);
 	bool isPlayerInsideElevator();
+	int actionToFloor(ButtonAction a);
+
 
 	void buildElevatorButtons();
 	void buildOutsideButtons();
+	void updateElevatorButtonPositions();
 
 	void testingWithButtons();
 };

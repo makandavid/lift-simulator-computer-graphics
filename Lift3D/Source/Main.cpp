@@ -91,7 +91,7 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
-        app.processOutsideButtonClick(window);
+        app.processButtonClick(window);
         app.update(delta);
         app.render();
 

@@ -161,3 +161,30 @@ void Renderer::drawModel(Model& model, glm::vec3 position, float scale, Camera& 
     model.Draw(shader);
 }
 
+void Renderer::clearLights()
+{
+    pointLights.clear();
+}
+
+void Renderer::addLight(glm::vec3 pos, glm::vec3 color)
+{
+    pointLights.push_back({ pos, color });
+}
+
+void Renderer::uploadLights(Camera& cam)
+{
+    shader.use();
+
+    int count = (int)pointLights.size();
+    if (count > 32) count = 32;
+
+    shader.setInt("numLights", count);
+    shader.setVec3("viewPos", cam.position);
+
+    for (int i = 0; i < count; i++)
+    {
+        std::string base = "lights[" + std::to_string(i) + "]";
+        shader.setVec3(base + ".position", pointLights[i].position);
+        shader.setVec3(base + ".color", pointLights[i].color);
+    }
+}

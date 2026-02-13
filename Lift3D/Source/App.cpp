@@ -11,6 +11,9 @@ void App::init()
     cursorFan = loadImageToCursor("Resources/textures/cursor_colored.png");
     glfwSetCursor(window, cursorNormal);
 
+    buildElevatorButtons();
+    buildOutsideButtons();
+
     plantModels[0] = Model("Resources/models/eb_house_plant_01.obj");
     plantModels[1] = Model("Resources/models/potted_plant_obj.obj");
     plantModels[2] = Model("Resources/models/plant.obj");
@@ -29,6 +32,8 @@ void App::init()
 void App::update(float deltaTime)
 {
     buildColliders();
+
+    updateElevatorButtonPositions();
 
     camera.update(window);
 
@@ -63,6 +68,7 @@ void App::update(float deltaTime)
                 doorClosing = false;
                 doorOpening = true;
             }
+            b.pressed = false;
             break;
 
         case DOOR_CLOSE:
@@ -71,6 +77,7 @@ void App::update(float deltaTime)
                 doorOpen = false;
                 doorClosing = true;
             }
+            b.pressed = false;
             break;
 
         case STOP:
@@ -80,17 +87,30 @@ void App::update(float deltaTime)
             doorClosing = false;
             isStopped = true;
             floorQueue = std::queue<int>();
+            b.pressed = false;
             break;
 
         case FAN:
-            glfwSetCursor(window, cursorFan);
+            
+            isFanOn = !isFanOn;
+            isFanOn ? glfwSetCursor(window, cursorFan) : glfwSetCursor(window, cursorNormal);
+            b.pressed = false;
             break;
 
         default:
+            int buttonFloor = actionToFloor((ButtonAction)b.action);
+
+            if (buttonFloor == elevatorFloor &&
+                !elevatorMoving &&
+                doorOpen)
+            {
+                b.pressed = false;
+            }
             break;
+
         }
 
-        b.pressed = false;
+        
     }
 
 
@@ -152,6 +172,7 @@ void App::update(float deltaTime)
             doorOffset = 0.0f;
             doorClosing = false;
             doorOpen = false;
+            isFanOn = false;
             glfwSetCursor(window, cursorNormal);
 
             while (!floorQueue.empty())
@@ -382,6 +403,15 @@ void App::render()
     glClearColor(0.2f, 0.3f, 0.35f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    renderer.clearLights();
+    renderer.addLight(glm::vec3(-50, 20, -50),
+        glm::vec3(1.0f));
+
+    collectBulbLights();
+    collectButtonLights();
+
+    renderer.uploadLights(camera);
+
     renderOutsideGround();
     renderBuilding();
     renderElevator();
@@ -464,6 +494,24 @@ void App::renderBuilding()
             renderer.texFloor,
             camera
         );
+        if (i == 6)
+        {
+            renderer.drawCube(
+                glm::vec3(
+                    0.0f,
+                    y + floorHeight,
+                    0.0f
+                ),
+                glm::vec3(
+                    floorWidth,
+                    floorThickness,
+                    floorDepth
+                ),
+                colorFloor,
+                renderer.texFloor,
+                camera
+            );
+        }
 
 
         // front wall
@@ -716,28 +764,21 @@ void App::buildElevatorButtons()
 {
     elevatorButtons.clear();
 
-    float panelX = 1.8f;
-    float startY = elevatorY;
-    float z1 = -6.5f;
-    float z2 = z1 + 0.1;
-
-    float dy = 0.1f;
-
     glm::vec3 size(0.01f, 0.1f, 0.1f);
 
-    elevatorButtons.push_back({ {panelX,startY,z1}, size,  FLOOR_SU });
-    elevatorButtons.push_back({ {panelX,startY,z2}, size, FLOOR_PR });
-    elevatorButtons.push_back({ {panelX,startY - dy,z1}, size, FLOOR_1 });
-    elevatorButtons.push_back({ {panelX,startY - dy,z2}, size, FLOOR_2 });
-    elevatorButtons.push_back({ {panelX,startY - 2 * dy,z1}, size, FLOOR_3 });
-    elevatorButtons.push_back({ {panelX,startY - 2 * dy,z2}, size, FLOOR_4 });
-    elevatorButtons.push_back({ {panelX,startY - 3 * dy,z1}, size, FLOOR_5 });
-    elevatorButtons.push_back({ {panelX,startY - 3 * dy,z2}, size, FLOOR_6 });
+    elevatorButtons.push_back({ {}, size,  FLOOR_SU });
+    elevatorButtons.push_back({ {}, size, FLOOR_PR });
+    elevatorButtons.push_back({ {}, size, FLOOR_1 });
+    elevatorButtons.push_back({ {}, size, FLOOR_2 });
+    elevatorButtons.push_back({ {}, size, FLOOR_3 });
+    elevatorButtons.push_back({ {}, size, FLOOR_4 });
+    elevatorButtons.push_back({ {}, size, FLOOR_5 });
+    elevatorButtons.push_back({ {}, size, FLOOR_6 });
 
-    elevatorButtons.push_back({ {panelX,startY - 4 * dy,z1}, size, DOOR_OPEN });
-    elevatorButtons.push_back({ {panelX,startY - 4 * dy,z2}, size, DOOR_CLOSE });
-    elevatorButtons.push_back({ {panelX,startY - 5 * dy,z1}, size, STOP });
-    elevatorButtons.push_back({ {panelX,startY - 5 * dy,z2}, size, FAN });
+    elevatorButtons.push_back({ {}, size, DOOR_OPEN });
+    elevatorButtons.push_back({ {}, size, DOOR_CLOSE });
+    elevatorButtons.push_back({ {}, size, STOP });
+    elevatorButtons.push_back({ {}, size, FAN });
 }
 
 void App::buildOutsideButtons()
@@ -756,10 +797,38 @@ void App::buildOutsideButtons()
     }
 }
 
+void App::updateElevatorButtonPositions()
+{
+    float panelX = 1.8f;
+    float startY = elevatorY;
+    float z1 = -6.5f;
+    float z2 = z1 + 0.1f;
+    float dy = 0.1f;
+
+    // floor buttons
+    elevatorButtons[0].position = { panelX, startY, z1 };
+    elevatorButtons[1].position = { panelX, startY, z2 };
+
+    elevatorButtons[2].position = { panelX, startY - dy, z1 };
+    elevatorButtons[3].position = { panelX, startY - dy, z2 };
+
+    elevatorButtons[4].position = { panelX, startY - 2 * dy, z1 };
+    elevatorButtons[5].position = { panelX, startY - 2 * dy, z2 };
+
+    elevatorButtons[6].position = { panelX, startY - 3 * dy, z1 };
+    elevatorButtons[7].position = { panelX, startY - 3 * dy, z2 };
+
+    // control buttons
+    elevatorButtons[8].position = { panelX, startY - 4 * dy, z1 };
+    elevatorButtons[9].position = { panelX, startY - 4 * dy, z2 };
+
+    elevatorButtons[10].position = { panelX, startY - 5 * dy, z1 };
+    elevatorButtons[11].position = { panelX, startY - 5 * dy, z2 };
+}
+
+
 void App::renderButtons()
 {
-    buildElevatorButtons();
-    buildOutsideButtons();
 
     for (auto& b : elevatorButtons)
     {
@@ -779,7 +848,6 @@ void App::renderButtons()
             case ButtonAction::DOOR_CLOSE:     tex = renderer.texBtnClose; break;
             case ButtonAction::STOP:      tex = renderer.texBtnStop; break;
             case ButtonAction::FAN:       tex = renderer.texBtnFan; break;
-            case ButtonAction::CALL_ELEVATOR: tex = renderer.texBtnOpen; break;
         }
 
         renderer.drawCube(
@@ -845,21 +913,59 @@ void App::renderBulbs()
 
     std::vector<glm::vec3> lightPositions;
 
-    for (int i = -1; i < floorCount - 1; i++) {
+    for (int i = -1; i < floorCount - 1; i++) 
+    {
         float y = i * floorHeight + floorHeight - 0.1f;
         lightPositions.push_back(glm::vec3(0.0f, y, 0.0f));
     }
 
-    for (auto& pos : lightPositions) {
+    for (auto& pos : lightPositions) 
+    {
         renderer.drawModel(lightBulb, pos, 0.05f, camera, glm::vec3(180.0f, 0.0f, 0.0f));
     }
 
 
     // Elevator ceiling light moves with elevator
-    glm::vec3 elevatorLightPos(0.0f, elevatorY + 0.9f, shaftZ); // Y offset inside elevator
+    glm::vec3 elevatorLightPos(0.0f, elevatorY + 1.0f, shaftZ); // Y offset inside elevator
     renderer.drawModel(lightBulb, elevatorLightPos, 0.05f, camera, glm::vec3(180.0f, 0.0f, 0.0f));
 
 
+}
+
+void App::collectBulbLights()
+{
+    float shaftSize = 4.0f;
+    float shaftZ = (shaftSize - buildingDepth) / 2 + 0.2f;
+
+    for (int i = -1; i < floorCount - 1; i++)
+    {
+        float y = i * floorHeight + floorHeight - 0.5f;
+
+        renderer.addLight(
+            glm::vec3(0.0f, y, 0.0f),
+            glm::vec3(1.0f)
+        );
+    }
+
+    glm::vec3 elevatorLightPos(0.0f,
+        elevatorY,
+        shaftZ);
+
+    renderer.addLight(elevatorLightPos,
+        glm::vec3(1.0f));
+}
+
+void App::collectButtonLights()
+{
+    for (auto& b : elevatorButtons)
+    {
+        if (!b.pressed)
+            continue;
+
+        glm::vec3 offset = glm::vec3(0.0f, 0, 0);
+        renderer.addLight(b.position + offset, glm::vec3(1.0f, 0, 0));
+
+    }
 }
 
 
@@ -890,7 +996,7 @@ bool rayIntersectsAABB(glm::vec3 rayOrigin, glm::vec3 rayDir, glm::vec3 boxMin, 
     return true;
 }
 
-void App::processOutsideButtonClick(GLFWwindow* window)
+void App::processButtonClick(GLFWwindow* window)
 {
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
@@ -958,6 +1064,23 @@ bool App::isPlayerInsideElevator()
         p.y >= minY && p.y <= maxY &&
         p.z >= minZ && p.z <= maxZ;
 }
+
+int App::actionToFloor(ButtonAction a)
+{
+    switch (a)
+    {
+    case FLOOR_SU: return -1;
+    case FLOOR_PR: return 0;
+    case FLOOR_1:  return 1;
+    case FLOOR_2:  return 2;
+    case FLOOR_3:  return 3;
+    case FLOOR_4:  return 4;
+    case FLOOR_5:  return 5;
+    case FLOOR_6:  return 6;
+    default:       return 999;
+    }
+}
+
 
 
 void App::testingWithButtons()

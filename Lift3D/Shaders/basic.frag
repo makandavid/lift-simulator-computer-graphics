@@ -1,5 +1,7 @@
 #version 330 core
 
+#define MAX_LIGHTS 32
+
 out vec4 FragColor;
 
 in vec3 FragPos;
@@ -10,33 +12,41 @@ uniform vec3 uColor;
 uniform sampler2D tex;
 
 uniform vec3 lightPos;
-uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 objectColor;
+
+uniform int numLights;
+uniform vec3 viewPos;
+
+struct PointLight
+{
+    vec3 position;
+    vec3 color;
+};
+
+uniform PointLight lights[MAX_LIGHTS];
 
 void main()
 {
     vec3 norm = normalize(Normal);
 
-    // light direction
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 result = vec3(0.0);
 
-    // diffuse
-    float diff = max(dot(norm, lightDir), 0.0);
+    for(int i = 0; i < numLights; i++)
+    {
+        vec3 lightDir = normalize(lights[i].position - FragPos);
 
-    // ambient so things aren't black
-    float ambientStrength = 0.3;
-    vec3 ambient = ambientStrength * lightColor;
+        float diff = max(dot(norm, lightDir), 0.0);
 
-    vec3 diffuse = diff * lightColor;
+        float distance = length(lights[i].position - FragPos);
+        float attenuation = 1.0 / (1.0 + 0.09*distance + 0.03*distance*distance);
 
-    vec3 lighting = (ambient + diffuse);
+        vec3 ambient = 0.0 * lights[i].color;
+        vec3 diffuse = diff * lights[i].color;
 
-    // diffuse only (point light)
-//    float diff = max(dot(norm, lightDir), 0.0);
-//    vec3 lighting = diff * lightColor;
-//
+        result += (ambient + diffuse) * attenuation;
+    }
+
     vec4 texColor = texture(tex, TexCoord);
-
-    FragColor = vec4(lighting, 1.0) * texColor;
+    FragColor = vec4(result, 1.0) * texColor;
 }
